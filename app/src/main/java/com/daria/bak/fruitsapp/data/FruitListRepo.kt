@@ -8,7 +8,7 @@ interface FruitListRepoInterface {
 class FruitListRepo(private val service: FruitListServiceInterface): FruitListRepoInterface {
     override fun getFruitList(): ArrayList<Fruit> {
         var fruitList: ArrayList<Fruit> = ArrayList<Fruit>()
-        var fruitListDTO: ArrayList<FruitDTO> = service.getFruitList()
+        service
         return fruitList
     }
 }

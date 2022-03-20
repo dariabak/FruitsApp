@@ -36,7 +36,7 @@ class FruitListFragment: Fragment() {
             false
         )
 
-        val service: FruitListServiceInterface = FruitListService(requireActivity())
+        val service: FruitListServiceInterface = FruitListService()
         val repo: FruitListRepoInterface = FruitListRepo(service)
         viewModel = ViewModelProviders.of(this, FruitListViewModelFactory(repo)).get(
             FruitListViewModel::class.java)
