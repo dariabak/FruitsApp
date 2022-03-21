@@ -26,7 +26,7 @@ class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.fruit_list_layout, viewGroup, false)
+            .inflate(R.layout.fruit_list_item_layout, viewGroup, false)
 
         return ViewHolder(view, fragment)
     }
