@@ -31,4 +31,8 @@ class FruitListViewModel(private val repo: FruitListRepoInterface): ViewModel() 
         Log.i("FruitListViewModel", "Yeey")
     }
 
+    fun refreshData() {
+        Log.i("FruitListViewModel", "Data refreshed")
+    }
+
 }

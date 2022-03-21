@@ -5,22 +5,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.android.volley.toolbox.Volley
 import com.daria.bak.fruitsapp.R
+import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModel
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModelFactory
 import com.daria.bak.fruitsapp.fruitList.data.FruitListRepo
 import com.daria.bak.fruitsapp.fruitList.data.FruitListRepoInterface
 import com.daria.bak.fruitsapp.fruitList.data.FruitListService
 import com.daria.bak.fruitsapp.fruitList.data.FruitListServiceInterface
-import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
-import com.daria.bak.fruitsapp.fruit.FruitFragment
+
 
 class FruitListFragment: Fragment() {
     private lateinit var binding: FruitListLayoutBinding
@@ -58,10 +58,16 @@ class FruitListFragment: Fragment() {
                 var action =
                     FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
                 action.type = type
+//                action.price = 0F
+//                action.weight = 0F
                 navController.navigate(action)
             }
         }
 
+        binding.pullRefresh.setOnRefreshListener(OnRefreshListener {
+            viewModel.refreshData()
+            binding.pullRefresh.setRefreshing(false)
+        })
         return binding.root
     }
 }
