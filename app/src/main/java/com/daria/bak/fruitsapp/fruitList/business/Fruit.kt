@@ -1,6 +1,6 @@
-package com.daria.bak.fruitsapp.business
+package com.daria.bak.fruitsapp.fruitList.business
 
-import com.daria.bak.fruitsapp.data.FruitDTO
+import com.daria.bak.fruitsapp.fruitList.data.FruitDTO
 
 class Fruit {
     constructor(fruitDTO: FruitDTO){

@@ -1,7 +1,5 @@
-package com.daria.bak.fruitsapp.data
+package com.daria.bak.fruitsapp.fruitList.data
 
-import java.text.SimpleDateFormat
-import java.util.*
 import com.google.gson.annotations.SerializedName
 
 class FruitDTO {

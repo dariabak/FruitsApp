@@ -1,11 +1,9 @@
-package com.daria.bak.fruitsapp.data
+package com.daria.bak.fruitsapp.fruitList.data
 
-import android.content.Context
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
-import com.daria.bak.fruitsapp.business.Fruit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

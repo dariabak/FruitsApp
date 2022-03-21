@@ -1,7 +1,7 @@
-package com.daria.bak.fruitsapp.data
+package com.daria.bak.fruitsapp.fruitList.data
 
 import android.util.Log
-import com.daria.bak.fruitsapp.business.Fruit
+import com.daria.bak.fruitsapp.fruitList.business.Fruit
 
 interface FruitListRepoInterface {
     var onFruitDownloadedListener: ((fruitList: ArrayList<Fruit>) -> Unit)?

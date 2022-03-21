@@ -7,18 +7,20 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.daria.bak.fruitsapp.R
-import com.daria.bak.fruitsapp.business.Fruit
+import com.daria.bak.fruitsapp.fruitList.business.Fruit
 
 class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment):  RecyclerView.Adapter<FruitListAdapter.ViewHolder>(){
     val fragment: Fragment = fragment
-    class ViewHolder(view: View, fragment: Fragment) : RecyclerView.ViewHolder(view) {
+    var handler: ((String) -> Unit)? = null
+
+    class ViewHolder(view: View, fragment: Fragment, handler: ((String) -> Unit)?) : RecyclerView.ViewHolder(view) {
         var typeView: TextView
 
         init {
             typeView = view.findViewById(R.id.type_text)
-//            view.setOnClickListener{
-//                handler?.invoke(id)
-//            }
+            view.setOnClickListener{
+                handler?.invoke(typeView.text as String)
+            }
         }
     }
 
@@ -28,7 +30,7 @@ class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.fruit_list_item_layout, viewGroup, false)
 
-        return ViewHolder(view, fragment)
+        return ViewHolder(view, fragment, handler)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -47,7 +49,7 @@ class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
-//    fun setTapHandler(handler: (String) -> Unit){
-//        this.handler = handler
-//    }
+    fun setTapHandler(handler: (String) -> Unit){
+        this.handler = handler
+    }
 }

@@ -8,5 +8,17 @@
         android:id="@+id/fruitListFragment"
         android:name="com.daria.bak.fruitsapp.fruitList.ui.FruitListFragment"
         android:label="FruitListFragment">
+        <action
+            android:id="@+id/action_fruitListFragment_to_fruitFragment"
+            app:destination="@id/fruitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fruitFragment"
+        android:name="com.daria.bak.fruitsapp.fruit.FruitFragment"
+        android:label="FruitFragment" >
+        <argument
+            android:name="type"
+            app:argType="string"
+            android:defaultValue="None"/>
     </fragment>
 </navigation>

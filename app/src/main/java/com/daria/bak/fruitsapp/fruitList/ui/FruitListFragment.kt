@@ -1,22 +1,26 @@
 package com.daria.bak.fruitsapp.fruitList.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.Volley
 import com.daria.bak.fruitsapp.R
-import com.daria.bak.fruitsapp.business.FruitListViewModel
-import com.daria.bak.fruitsapp.business.FruitListViewModelFactory
-import com.daria.bak.fruitsapp.data.FruitListRepo
-import com.daria.bak.fruitsapp.data.FruitListRepoInterface
-import com.daria.bak.fruitsapp.data.FruitListService
-import com.daria.bak.fruitsapp.data.FruitListServiceInterface
+import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModel
+import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModelFactory
+import com.daria.bak.fruitsapp.fruitList.data.FruitListRepo
+import com.daria.bak.fruitsapp.fruitList.data.FruitListRepoInterface
+import com.daria.bak.fruitsapp.fruitList.data.FruitListService
+import com.daria.bak.fruitsapp.fruitList.data.FruitListServiceInterface
 import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
+import com.daria.bak.fruitsapp.fruit.FruitFragment
 
 class FruitListFragment: Fragment() {
     private lateinit var binding: FruitListLayoutBinding
@@ -43,13 +47,19 @@ class FruitListFragment: Fragment() {
         viewModel = ViewModelProviders.of(this, FruitListViewModelFactory(repo)).get(
             FruitListViewModel::class.java)
 
-//        viewModel.getFruitList()
-
         linearLayoutManager = LinearLayoutManager(requireActivity())
         binding.fruitList.layoutManager = linearLayoutManager
         viewModel.onFruitDownloadedListener = { fruitList ->
-            adapter = FruitListAdapter(viewModel.fruitList,this)
+            adapter = FruitListAdapter(fruitList,this)
             binding.fruitList.adapter = adapter
+            adapter.setTapHandler { type ->
+                Log.i("FruitListFragment", "Listener works$type")
+                var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                var action =
+                    FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
+                action.type = type
+                navController.navigate(action)
+            }
         }
 
         return binding.root
