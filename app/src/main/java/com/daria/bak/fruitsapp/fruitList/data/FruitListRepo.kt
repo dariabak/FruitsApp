@@ -4,13 +4,9 @@ import android.util.Log
 import com.daria.bak.fruitsapp.fruitList.business.Fruit
 
 interface FruitListRepoInterface {
-    var onFruitDownloadedListener: ((fruitList: ArrayList<Fruit>) -> Unit)?
     fun getFruitList(handler: (ArrayList<Fruit>) -> Unit)
 }
 class FruitListRepo(private val service: FruitListServiceInterface): FruitListRepoInterface {
-    override var onFruitDownloadedListener: ((fruitList: ArrayList<Fruit>) -> Unit)? = null
-
-
 
     override fun getFruitList(handler: (ArrayList<Fruit>) -> Unit) {
 

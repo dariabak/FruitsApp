@@ -17,24 +17,20 @@ import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
 import com.daria.bak.fruitsapp.fruitList.business.Fruit
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModel
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModelFactory
-import com.daria.bak.fruitsapp.fruitList.data.FruitListRepo
-import com.daria.bak.fruitsapp.fruitList.data.FruitListRepoInterface
-import com.daria.bak.fruitsapp.fruitList.data.FruitListService
-import com.daria.bak.fruitsapp.fruitList.data.FruitListServiceInterface
-
+import com.daria.bak.fruitsapp.fruitList.data.*
 
 class FruitListFragment: Fragment() {
     private lateinit var binding: FruitListLayoutBinding
     private lateinit var viewModel: FruitListViewModel
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: FruitListAdapter
-
+    var viewStartTime: Long = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        viewStartTime = System.currentTimeMillis()
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fruit_list_layout,
@@ -43,9 +39,8 @@ class FruitListFragment: Fragment() {
         )
         binding.lifecycleOwner = this
         val queue = Volley.newRequestQueue(context)
-        val service: FruitListServiceInterface = FruitListService(queue)
-        val repo: FruitListRepoInterface = FruitListRepo(service)
-        viewModel = ViewModelProviders.of(this, FruitListViewModelFactory(repo)).get(
+        val client: FruitListClientInterface = FruitListClient(queue)
+        viewModel = ViewModelProviders.of(this, FruitListViewModelFactory(client)).get(
             FruitListViewModel::class.java)
 
         linearLayoutManager = LinearLayoutManager(requireActivity())
@@ -94,5 +89,12 @@ class FruitListFragment: Fragment() {
             }
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        var viewTime = System.currentTimeMillis() - viewStartTime
+        Log.i("FruitListFragment", "View created in: $viewTime ms")
+        viewModel.viewLoaded(viewTime)
     }
 }
