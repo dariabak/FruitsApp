@@ -53,9 +53,7 @@ class FruitListFragment: Fragment() {
 
         adapter = FruitListAdapter(arrayListOf())
         binding.fruitList.adapter = adapter
-//        adapter = FruitListAdapter(viewModel.fruitList,this)
-//        binding.fruitList.adapter = adapter
-//        adapter.notifyDataSetChanged()
+
         adapter.setTapHandler { fruit ->
             Log.i("FruitListFragment", "Listener works")
             var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
@@ -66,22 +64,6 @@ class FruitListFragment: Fragment() {
             action.weight = fruit.weight.toString()
             navController.navigate(action)
         }
-//        viewModel.onFruitDownloadedListener = { fruitList ->
-//            adapter = FruitListAdapter(viewModel.fruitList,this)
-//            binding.fruitList.adapter = adapter
-//
-//            adapter.setTapHandler { fruit ->
-//                Log.i("FruitListFragment", "Listener works")
-//                var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-//                var action =
-//                    FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
-//                action.type = fruit.type
-//                action.price = fruit.price.toString()
-//                action.weight = fruit.weight.toString()
-//                navController.navigate(action)
-//            }
-//            adapter.notifyDataSetChanged()
-//        }
 
         binding.pullRefresh.setOnRefreshListener(OnRefreshListener {
             viewModel.refreshData()

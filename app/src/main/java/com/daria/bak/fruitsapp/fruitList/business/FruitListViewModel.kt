@@ -11,10 +11,6 @@ import java.lang.Exception
 
 
 class FruitListViewModel(private val repo: FruitListRepoInterface): ViewModel() {
-    var onFruitDownloadedListener: ((fruitList: ArrayList<Fruit>) -> Unit)? = null
-    private var _fruitListLiveData = MutableLiveData<ArrayList<Fruit>>()
-    val fruitListLiveData: LiveData<ArrayList<Fruit>>
-        get() = _fruitListLiveData
     var fruitList: ArrayList<Fruit> = ArrayList<Fruit>()
     private var _fruitListState = MutableLiveData<FruitListState>()
     val fruitListState: LiveData<FruitListState>
@@ -36,7 +32,6 @@ class FruitListViewModel(private val repo: FruitListRepoInterface): ViewModel() 
         _fruitListState.value =  FruitListState.Loading
 
         try{
-//            _fruitListState.value = FruitListState.Success(fruitList)
             getFruitList()
         } catch(e: Exception) {
             _fruitListState.value = FruitListState.Error(defaultError)
@@ -46,16 +41,13 @@ class FruitListViewModel(private val repo: FruitListRepoInterface): ViewModel() 
         repo.getFruitList() { list ->
             Log.i("FruitListViewModel", "getFruitList viewModel invoked")
             fruitList = list
-            _fruitListLiveData.value = list
             _fruitListState.value = FruitListState.Success(list)
-//            onFruitDownloadedListener?.invoke(list)
         }
 
     }
     private fun saveList(list: ArrayList<Fruit>) {
         fruitList = list
         _fruitListState.value = FruitListState.Success(fruitList)
-        onFruitDownloadedListener?.invoke(list)
         Log.i("FruitListViewModel", "Yeey")
     }
 
