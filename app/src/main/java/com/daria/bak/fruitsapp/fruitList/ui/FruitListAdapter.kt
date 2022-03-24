@@ -9,17 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.daria.bak.fruitsapp.R
 import com.daria.bak.fruitsapp.fruitList.business.Fruit
 
-class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment):  RecyclerView.Adapter<FruitListAdapter.ViewHolder>(){
-    val fragment: Fragment = fragment
-    var handler: ((String) -> Unit)? = null
+class FruitListAdapter(var dataSet: ArrayList<Fruit>):  RecyclerView.Adapter<FruitListAdapter.ViewHolder>(){
+    var handler: ((Fruit) -> Unit)? = null
 
-    class ViewHolder(view: View, fragment: Fragment, handler: ((String) -> Unit)?) : RecyclerView.ViewHolder(view) {
-        var typeView: TextView
-
+    class ViewHolder(view: View, handler: ((Fruit) -> Unit)?) : RecyclerView.ViewHolder(view) {
+        val typeView: TextView = view.findViewById(R.id.type_text)
+        var price: String = ""
+        var weight: String = ""
+        lateinit var fruit: Fruit
         init {
-            typeView = view.findViewById(R.id.type_text)
             view.setOnClickListener{
-                handler?.invoke(typeView.text as String)
+                handler?.invoke(fruit)
             }
         }
     }
@@ -30,7 +30,7 @@ class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.fruit_list_item_layout, viewGroup, false)
 
-        return ViewHolder(view, fragment, handler)
+        return ViewHolder(view, handler)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -40,16 +40,16 @@ class FruitListAdapter(private val dataSet: ArrayList<Fruit>, fragment: Fragment
         // contents of the view with that element
 
         viewHolder.typeView.text = dataSet.get(position).type
-//        viewHolder.dateTextView.text = dataSet.get(position).update
-//        viewHolder.numberOfTeamsTextView.text = dataSet.get(position).numberOfTeams.toString()
-//        viewHolder.id = dataSet.get(position).id
+        viewHolder.price = dataSet[position].price.toString()
+        viewHolder.weight = dataSet[position].weight.toString()
+        viewHolder.fruit = dataSet[position]
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
-    fun setTapHandler(handler: (String) -> Unit){
+    fun setTapHandler(handler: (Fruit) -> Unit){
         this.handler = handler
     }
 }

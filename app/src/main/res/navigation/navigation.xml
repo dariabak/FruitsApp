@@ -22,11 +22,11 @@
             android:defaultValue="None"/>
         <argument
             android:name="price"
-            app:argType="float"
+            app:argType="string"
             android:defaultValue="0" />
         <argument
             android:name="weight"
-            app:argType="float"
+            app:argType="string"
             android:defaultValue="0"/>
     </fragment>
 </navigation>

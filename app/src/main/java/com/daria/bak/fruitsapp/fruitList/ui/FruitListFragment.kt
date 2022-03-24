@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.android.volley.toolbox.Volley
 import com.daria.bak.fruitsapp.R
 import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
+import com.daria.bak.fruitsapp.fruitList.business.Fruit
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModel
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModelFactory
 import com.daria.bak.fruitsapp.fruitList.data.FruitListRepo
@@ -49,25 +50,67 @@ class FruitListFragment: Fragment() {
 
         linearLayoutManager = LinearLayoutManager(requireActivity())
         binding.fruitList.layoutManager = linearLayoutManager
-        viewModel.onFruitDownloadedListener = { fruitList ->
-            adapter = FruitListAdapter(fruitList,this)
-            binding.fruitList.adapter = adapter
-            adapter.setTapHandler { type ->
-                Log.i("FruitListFragment", "Listener works$type")
-                var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                var action =
-                    FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
-                action.type = type
-//                action.price = 0F
-//                action.weight = 0F
-                navController.navigate(action)
-            }
+
+        adapter = FruitListAdapter(arrayListOf())
+        binding.fruitList.adapter = adapter
+//        adapter = FruitListAdapter(viewModel.fruitList,this)
+//        binding.fruitList.adapter = adapter
+//        adapter.notifyDataSetChanged()
+        adapter.setTapHandler { fruit ->
+            Log.i("FruitListFragment", "Listener works")
+            var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            var action =
+                FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
+            action.type = fruit.type
+            action.price = fruit.price.toString()
+            action.weight = fruit.weight.toString()
+            navController.navigate(action)
         }
+//        viewModel.onFruitDownloadedListener = { fruitList ->
+//            adapter = FruitListAdapter(viewModel.fruitList,this)
+//            binding.fruitList.adapter = adapter
+//
+//            adapter.setTapHandler { fruit ->
+//                Log.i("FruitListFragment", "Listener works")
+//                var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+//                var action =
+//                    FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
+//                action.type = fruit.type
+//                action.price = fruit.price.toString()
+//                action.weight = fruit.weight.toString()
+//                navController.navigate(action)
+//            }
+//            adapter.notifyDataSetChanged()
+//        }
 
         binding.pullRefresh.setOnRefreshListener(OnRefreshListener {
             viewModel.refreshData()
             binding.pullRefresh.setRefreshing(false)
         })
+        viewModel.fruitListState.observe(viewLifecycleOwner) {
+            when(it) {
+                is FruitListState.Success -> {
+                    adapter.dataSet = it.fruitList
+
+                    binding.successLayout.visibility = View.VISIBLE
+                    binding.errorLayout.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    adapter.notifyDataSetChanged()
+
+                }
+                is FruitListState.Loading -> {
+                    binding.successLayout.visibility = View.GONE
+                    binding.errorLayout.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is FruitListState.Error -> {
+                    binding.successLayout.visibility = View.GONE
+                    binding.errorLayout.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                    binding.errorText.text = it.message
+                }
+            }
+        }
         return binding.root
     }
 }
