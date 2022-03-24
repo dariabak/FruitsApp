@@ -10,11 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.android.volley.toolbox.Volley
 import com.daria.bak.fruitsapp.R
 import com.daria.bak.fruitsapp.databinding.FruitListLayoutBinding
-import com.daria.bak.fruitsapp.fruitList.business.Fruit
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModel
 import com.daria.bak.fruitsapp.fruitList.business.FruitListViewModelFactory
 import com.daria.bak.fruitsapp.fruitList.data.*
@@ -25,11 +23,12 @@ class FruitListFragment: Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: FruitListAdapter
     var viewStartTime: Long = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewStartTime = System.currentTimeMillis()
         binding = DataBindingUtil.inflate(
             inflater,
@@ -51,8 +50,8 @@ class FruitListFragment: Fragment() {
 
         adapter.setTapHandler { fruit ->
             Log.i("FruitListFragment", "Listener works")
-            var navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-            var action =
+            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            val action =
                 FruitListFragmentDirections.actionFruitListFragmentToFruitFragment()
             action.type = fruit.type
             action.price = fruit.price.toString()
@@ -60,10 +59,10 @@ class FruitListFragment: Fragment() {
             navController.navigate(action)
         }
 
-        binding.pullRefresh.setOnRefreshListener(OnRefreshListener {
+        binding.pullRefresh.setOnRefreshListener {
             viewModel.refreshData()
-            binding.pullRefresh.setRefreshing(false)
-        })
+            binding.pullRefresh.isRefreshing = false
+        }
         viewModel.fruitListState.observe(viewLifecycleOwner) {
             when(it) {
                 is FruitListState.Success -> {
@@ -93,8 +92,9 @@ class FruitListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var viewTime = System.currentTimeMillis() - viewStartTime
+        val viewTime = System.currentTimeMillis() - viewStartTime
         Log.i("FruitListFragment", "View created in: $viewTime ms")
-        viewModel.viewLoaded(viewTime)
+        viewModel.sendViewLoadingAnalytics(viewTime)
     }
+
 }

@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/fruitFragment"
-        android:name="com.daria.bak.fruitsapp.fruit.FruitFragment"
+        android:name="com.daria.bak.fruitsapp.fruit.ui.FruitFragment"
         android:label="FruitFragment" >
         <argument
             android:name="type"

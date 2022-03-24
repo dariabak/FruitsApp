@@ -3,10 +3,8 @@ package com.daria.bak.fruitsapp.fruitList.business
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
 import androidx.lifecycle.ViewModel
 import com.daria.bak.fruitsapp.fruitList.data.FruitListClientInterface
-import com.daria.bak.fruitsapp.fruitList.data.FruitListRepoInterface
 import com.daria.bak.fruitsapp.fruitList.ui.FruitListState
 import java.lang.Exception
 
@@ -29,17 +27,17 @@ class FruitListViewModel(private val client: FruitListClientInterface): ViewMode
     }
 
     fun getFruitList() {
-        client.getFruitList() { list ->
+        client.getFruitList() { result ->
             Log.i("FruitListViewModel", "getFruitList viewModel invoked")
-            fruitList = list
-            _fruitListState.value = FruitListState.Success(list)
+            if(result.isSuccess) {
+                fruitList = result.getOrDefault(fruitList)
+                _fruitListState.value = FruitListState.Success(result.getOrDefault(fruitList))
+            } else if (result.isFailure) {
+                _fruitListState.value = FruitListState.Error(defaultError)
+                sendErrorAnalytics()
+            }
         }
 
-    }
-    private fun saveList(list: ArrayList<Fruit>) {
-        fruitList = list
-        _fruitListState.value = FruitListState.Success(fruitList)
-        Log.i("FruitListViewModel", "Yeey")
     }
 
     fun refreshData() {
@@ -47,7 +45,11 @@ class FruitListViewModel(private val client: FruitListClientInterface): ViewMode
         getFruitList()
         Log.i("FruitListViewModel", "Data refreshed")
     }
-    fun viewLoaded(data: Long) {
-        client.viewLoaded(data)
+    fun sendViewLoadingAnalytics(time: Long) {
+        client.sendViewLoadingAnalytics(time)
+    }
+
+    private fun sendErrorAnalytics() {
+        client.sendErrorAnalytics()
     }
 }
